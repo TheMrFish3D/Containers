@@ -1,3 +1,24 @@
+# =============================================
+# Tailscale (tailscale/tailscale)
+#
+# Service:
+# - tailscale
+# Docker Hub:
+# - https://hub.docker.com/r/tailscale/tailscale
+# GitHub:
+# - https://github.com/tailscale/tailscale
+#
+# Volumes:
+# - /tank/containers/tailscale -> /var/lib/tailscale
+# Ports/Networking:
+# - Uses host network mode for best compatibility
+#
+# How to use:
+# 1) Provide a valid TS_AUTHKEY and configure desired routes.
+# 2) Start:  docker compose up -d
+# 3) Stop:   docker compose down
+# 4) Update: docker compose pull && docker compose up -d
+# =============================================
 services:
   tailscale:
     image: tailscale/tailscale:latest

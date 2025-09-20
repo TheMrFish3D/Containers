@@ -1,3 +1,49 @@
+# =============================================
+# Servarr Stack - Sonarr/Radarr/Lidarr/Prowlarr/Bazarr/Overseerr + SABnzbd/qBittorrent
+#
+# What each service does:
+# - Sonarr: Automates TV series. Monitors indexers via Prowlarr, sends grabs to SABnzbd/qBittorrent, then imports/renames into your library.
+# - Radarr: Automates movies. Similar to Sonarr but for films; works with Prowlarr and your download clients to manage movie libraries.
+# - Lidarr: Automates music. Tracks artists/albums, downloads new releases, and organizes your music library.
+# - Prowlarr: Central indexer manager/proxy. Configure your Usenet/Torrent indexers once and sync them to Sonarr/Radarr/Lidarr.
+# - Bazarr: Manages subtitles for your movies/TV. Searches, downloads, and keeps subtitles in sync with your media.
+# - Overseerr: Media request portal. Users request movies/TV; forwards approved requests to Radarr/Sonarr. Integrates with Plex/Jellyfin.
+# - SABnzbd: Usenet download client used by the *arr apps to fetch content from NZB indexers.
+# - qBittorrent: BitTorrent download client used by the *arr apps to fetch content from torrent trackers.
+#
+# Docker Hub:
+# - https://hub.docker.com/r/linuxserver/sonarr
+# - https://hub.docker.com/r/linuxserver/radarr
+# - https://hub.docker.com/r/linuxserver/lidarr
+# - https://hub.docker.com/r/linuxserver/prowlarr
+# - https://hub.docker.com/r/linuxserver/bazarr
+# - https://hub.docker.com/r/linuxserver/overseerr
+# - https://hub.docker.com/r/linuxserver/sabnzbd
+# - https://hub.docker.com/r/linuxserver/qbittorrent
+# GitHub:
+# - https://github.com/linuxserver/docker-sonarr
+# - https://github.com/linuxserver/docker-radarr
+# - https://github.com/linuxserver/docker-lidarr
+# - https://github.com/linuxserver/docker-prowlarr
+# - https://github.com/linuxserver/docker-bazarr
+# - https://github.com/linuxserver/docker-overseerr
+# - https://github.com/linuxserver/docker-sabnzbd
+# - https://github.com/linuxserver/docker-qbittorrent
+#
+# Volumes (host -> container):
+# - /tank/containers/<service> -> /config
+# - /tank/data -> /data (media root for *arr + Bazarr)
+# - /tank/data/downloads -> /downloads (SAB/qBittorrent + *arr import)
+# - /tank/data/scripts -> /scripts (optional for SAB/qBittorrent scripts)
+#
+# How to use:
+# 1) Customize host paths under /tank to match your storage.
+# 2) Ensure PUID/PGID match your media user (id -u / id -g).
+# 3) Start:    docker compose up -d
+# 4) Stop:     docker compose down
+# 5) Update:   docker compose pull && docker compose up -d
+# 6) Access UIs: Sonarr 8989, Radarr 7878, Lidarr 8686, Prowlarr 9696, Bazarr 6767, Overseerr 5055, SAB 8080, qBittorrent 8081
+# =============================================
 services:
   sonarr:
     image: lscr.io/linuxserver/sonarr:latest
@@ -7,7 +53,6 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=Australia/Brisbane
-      # - UMASK=002
     ports:
       - "8989:8989"
     volumes:
@@ -23,7 +68,6 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=Australia/Brisbane
-      # - UMASK=002
     ports:
       - "7878:7878"
     volumes:
@@ -39,7 +83,6 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=Australia/Brisbane
-      # - UMASK=002
     ports:
       - "8686:8686"
     volumes:
@@ -68,12 +111,11 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=Australia/Brisbane
-      # - UMASK=002
     ports:
       - "6767:6767"
     volumes:
       - /tank/containers/bazarr:/config
-      - /tank/data:/data         # Bazarr must see media paths
+      - /tank/data:/data
 
   overseerr:
     image: lscr.io/linuxserver/overseerr:latest
@@ -95,14 +137,12 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=Australia/Brisbane
-      # - UMASK=002            # optional, group-write for *arr imports
     ports:
-      - "8080:8080"           # SABnzbd web UI (HTTP)
-      # - "9090:9090"         # optional HTTPS
+      - "8080:8080"
     volumes:
       - /tank/containers/sabnzbd:/config
       - /tank/data/downloads:/downloads
-      - /tank/data/scripts:/scripts   # optional post-processing scripts
+      - /tank/data/scripts:/scripts
   qbittorrent:
     image: lscr.io/linuxserver/qbittorrent:latest
     container_name: qbittorrent
@@ -111,13 +151,12 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=Australia/Brisbane
-      - WEBUI_PORT=8081          # avoid SAB's 8080
-      # - UMASK=002              # optional: group-write for *arr imports
+      - WEBUI_PORT=8081
     ports:
-      - "8081:8081"              # WebUI
-      - "6881:6881"              # BT TCP
-      - "6881:6881/udp"          # BT UDP
+      - "8081:8081"
+      - "6881:6881"
+      - "6881:6881/udp"
     volumes:
       - /tank/containers/qbittorrent:/config
       - /tank/data/downloads:/downloads
-      - /tank/data/scripts:/scripts   # optional
+      - /tank/data/scripts:/scripts

@@ -1,3 +1,29 @@
+# =============================================
+# Plex Media Server (linuxserver/plex)
+#
+# Service:
+# - plex
+# Docker Hub:
+# - https://hub.docker.com/r/linuxserver/plex
+# GitHub:
+# - https://github.com/linuxserver/docker-plex
+#
+# Volumes:
+# - /tank/containers/plex -> /config
+# - /tank/data/movies -> /data/movies
+# - /tank/data/tv -> /data/tv
+# - /tank/data/downloads/complete -> /data/downloads
+# - /dev/shm -> /transcode
+# Ports:
+# - 32400 (Plex web/UI)
+# - 32469 (DLNA, optional)
+#
+# How to use:
+# 1) Obtain a valid PLEX_CLAIM then start the container.
+# 2) Start:  docker compose up -d
+# 3) Stop:   docker compose down
+# 4) Update: docker compose pull && docker compose up -d
+# =============================================
 services:
   plex:
     image: lscr.io/linuxserver/plex:latest
@@ -13,7 +39,7 @@ services:
       - NVIDIA_DRIVER_CAPABILITIES=compute,video,utility
     ports:
       - "32400:32400/tcp"
-      - "32469:32469/tcp"     # DLNA (optional)
+      - "32469:32469/tcp"
     volumes:
       - /tank/containers/plex:/config
       - /tank/data/movies:/data/movies

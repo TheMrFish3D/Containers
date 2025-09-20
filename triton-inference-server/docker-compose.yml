@@ -1,3 +1,23 @@
+# =============================================
+# NVIDIA Triton Inference Server
+#
+# Service:
+# - triton
+# Docker Hub:
+# - https://catalog.ngc.nvidia.com/orgs/nvidia/containers/tritonserver
+# GitHub:
+# - https://github.com/triton-inference-server/server
+#
+# Volumes:
+# - /tank/data/models -> /models (model repository)
+#
+# How to use:
+# 1) Place models in /tank/data/models following Triton repo structure.
+# 2) Start:  docker compose up -d
+# 3) Stop:   docker compose down
+# 4) Update: docker compose pull && docker compose up -d
+# 5) Endpoints: REST 8000, gRPC 8001, Metrics 8002
+# =============================================
 version: "3.9"
 services:
   triton:
@@ -11,15 +31,10 @@ services:
       stack: 67108864
     environment:
       - TZ=Australia/Brisbane
-      # optional: tune Triton pools (bytes)
-      # - TRITONSERVER_CPU_MEM_POOL_BYTE_SIZE=0
-      # - TRITONSERVER_PINNED_MEM_POOL_BYTE_SIZE=268435456
     ports:
-      - "8000:8000"   # REST
-      - "8001:8001"   # gRPC
-      - "8002:8002"   # Prometheus metrics
+      - "8000:8000"
+      - "8001:8001"
+      - "8002:8002"
     volumes:
       - /tank/data/models:/models
-      # (optional) keep logs or custom backends here:
-      # - /tank/containers/triton:/opt/tritonserver
     command: tritonserver --model-repository=/models --model-control-mode=poll --repository-poll-secs=60 --strict-model-config=false --exit-on-error=false

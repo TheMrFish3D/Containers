@@ -1,3 +1,26 @@
+# =============================================
+# n8n Automation Platform + PostgreSQL
+#
+# Services:
+# - postgres (postgres:16)
+# - n8n (n8nio/n8n:latest)
+# Docker Hub:
+# - https://hub.docker.com/_/postgres
+# - https://hub.docker.com/r/n8nio/n8n
+# GitHub:
+# - https://github.com/n8n-io/n8n
+#
+# Volumes:
+# - n8n-postgres -> /var/lib/postgresql/data
+# - n8n-data -> /home/node/.n8n
+#
+# How to use:
+# 1) Optionally switch named volumes to bind mounts for persistence under /tank.
+# 2) Start:  docker compose up -d
+# 3) Stop:   docker compose down
+# 4) Update: docker compose pull && docker compose up -d
+# 5) Access: http://localhost:5678 (default basic auth in env)
+# =============================================
 version: "3.9"
 
 networks:
@@ -18,8 +41,6 @@ services:
       POSTGRES_DB: n8n
     volumes:
       - n8n-postgres:/var/lib/postgresql/data
-      # or bind-mount:
-      # - /tank/data/n8n/postgres:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U n8n -d n8n"]
       interval: 10s
@@ -53,5 +74,3 @@ services:
         condition: service_healthy
     volumes:
       - n8n-data:/home/node/.n8n
-      # or bind-mount:
-      # - /tank/data/n8n/data:/home/node/.n8n
