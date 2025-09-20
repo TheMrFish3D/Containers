@@ -1,0 +1,29 @@
+services:
+  satisfactory:
+    image: wolveix/satisfactory-server:latest
+    container_name: satisfactory
+    restart: unless-stopped
+    environment:
+      - MAXPLAYERS=4
+      - PGID=1000
+      - PUID=1000
+      - STEAMBETA=false
+      - SKIPUPDATE=false
+      - AUTOSAVENUM=3
+      - AUTOSAVEINTERVAL=300
+      - AUTOSAVEONDISCONNECT=true
+      - TIMEOUT=30
+      - MAXTICKRATE=30
+      - TZ=Australia/Brisbane
+    ports:
+      - "7777:7777/udp"                 # Game port
+      - "15000:15000/udp"               # Beacon port  
+      - "15777:15777/udp"               # Query port (optional)
+    volumes:
+      - /tank/containers/satisfactory:/config
+    healthcheck:
+      test: ["CMD", "bash", "/healthcheck.sh"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 120s

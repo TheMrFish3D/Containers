@@ -1,0 +1,38 @@
+services:
+  minecraft-java:
+    image: itzg/minecraft-server:latest
+    container_name: minecraft-java
+    restart: unless-stopped
+    environment:
+      - EULA=TRUE
+      - TYPE=VANILLA
+      - VERSION=LATEST
+      - MEMORY=2G
+      - DIFFICULTY=easy
+      - GAMEMODE=survival
+      - MAX_PLAYERS=20
+      - ONLINE_MODE=true
+      - ENABLE_WHITELIST=false
+      - MOTD=A Minecraft Server powered by Docker
+      - LEVEL_NAME=world
+      - LEVEL_SEED=
+      - VIEW_DISTANCE=10
+      - MODE=survival
+      - FORCE_GAMEMODE=false
+      - HARDCORE=false
+      - MAX_BUILD_HEIGHT=256
+      - SPAWN_PROTECTION=16
+      - MAX_TICK_TIME=60000
+      - ENABLE_COMMAND_BLOCK=false
+      - ENABLE_RCON=true
+      - RCON_PASSWORD=minecraft
+      - RCON_PORT=25575
+      - BROADCAST_RCON_TO_OPS=true
+      - TZ=Australia/Brisbane
+    ports:
+      - "25565:25565"                    # Minecraft server
+      - "25575:25575"                    # RCON (optional)
+    volumes:
+      - /tank/containers/minecraft-java:/data
+    stdin_open: true
+    tty: true
