@@ -1,29 +1,67 @@
-# Servarr Media Automation Stack
+# Servarr Stack
 
-This stack provides a complete media automation solution for managing movies, TV shows, music, and downloads.
+This stack provides a complete media automation suite:
 
-## Services
+- Sonarr: automates TV series management
+- Radarr: automates movie management
+- Lidarr: automates music management
+- Prowlarr: central indexer manager for *arr apps
+- Bazarr: subtitle management for movies/TV
+- Overseerr: media request portal integrated with Plex/Jellyfin and *arr
+- SABnzbd: Usenet downloader
+- qBittorrent: Torrent downloader
 
-### Content Management
-- **Sonarr** (Port 8989): TV show collection manager
-- **Radarr** (Port 7878): Movie collection manager  
-- **Lidarr** (Port 8686): Music collection manager
-- **Bazarr** (Port 6767): Subtitle management for Sonarr/Radarr
+## Quick start
 
-### Download Clients
-- **SABnzbd** (Port 8080): Usenet/NZB downloader
-- **qBittorrent** (Port 8081): BitTorrent client
+1) Ensure host paths under `/fileServerMountPath` exist and set PUID/PGID to your media user. On Docker Desktop with WSL, this typically lives under `/mnt/<drive>` (e.g., `/mnt/d`).
+2) Start: `docker compose up -d`
+3) Stop: `docker compose down`
+4) Update: `docker compose pull && docker compose up -d`
 
-### Additional Services
-- **Prowlarr** (Port 9696): Indexer manager for Sonarr/Radarr/Lidarr
-- **Overseerr** (Port 5055): Request management interface
+## Service ports
 
-## Prerequisites
+- Sonarr: http://localhost:8989
+- Radarr: http://localhost:7878
+- Lidarr: http://localhost:8686
+- Prowlarr: http://localhost:9696
+- Bazarr: http://localhost:6767
+- Overseerr: http://localhost:5055
+- SABnzbd: http://localhost:8080
+- qBittorrent: http://localhost:8081
 
-### Directory Structure
-Ensure these directories exist on your host:
+## Volumes
+
+- `/fileServerMountPath/containers/<service>` -> `/config`
+- `/fileServerMountPath/data` -> `/data`
+- `/fileServerMountPath/data/downloads` -> `/downloads`
+- `/fileServerMountPath/data/scripts` -> `/scripts` (optional)
+
+## Wiring overview
+
+- Prowlarr holds indexers and syncs them to Sonarr/Radarr/Lidarr.
+- Sonarr/Radarr/Lidarr send grabs to SABnzbd/qBittorrent.
+- On completion, the *arr apps import from `/downloads` into the `/data` library.
+
+## Mount path guidance
+
+Set `/fileServerMountPath` to the root of where your media and configs are mounted on the Linux host.
+
+- Docker Desktop with WSL: mounts are typically under `/mnt/<drive>` (e.g., `/mnt/d`).
+- Using locally mounted host paths simplifies RBAC and file permissions across containers.
+
+## Links
+
+- Docker Hub: [sonarr](https://hub.docker.com/r/linuxserver/sonarr), [radarr](https://hub.docker.com/r/linuxserver/radarr), [lidarr](https://hub.docker.com/r/linuxserver/lidarr), [prowlarr](https://hub.docker.com/r/linuxserver/prowlarr), [bazarr](https://hub.docker.com/r/linuxserver/bazarr), [overseerr](https://hub.docker.com/r/linuxserver/overseerr), [sabnzbd](https://hub.docker.com/r/linuxserver/sabnzbd), [qbittorrent](https://hub.docker.com/r/linuxserver/qbittorrent)
+- GitHub: [sonarr](https://github.com/linuxserver/docker-sonarr), [radarr](https://github.com/linuxserver/docker-radarr), [lidarr](https://github.com/linuxserver/docker-lidarr), [prowlarr](https://github.com/linuxserver/docker-prowlarr), [bazarr](https://github.com/linuxserver/docker-bazarr), [overseerr](https://github.com/linuxserver/docker-overseerr), [sabnzbd](https://github.com/linuxserver/docker-sabnzbd), [qbittorrent](https://github.com/linuxserver/docker-qbittorrent)
+
+## Tips
+
+- Use consistent PUID/PGID and UMASK across all services to avoid permission issues.
+- In qBittorrent, set the default save path to `/downloads` and categories per *arr app.
+- In SABnzbd, set completed download folder to `/downloads` and configure category mapping for *arr.
+
 ```
-/tank/
+/fileServerMountPath/
 ├── containers/          # Application configurations
 │   ├── sonarr/
 │   ├── radarr/
@@ -34,11 +72,11 @@ Ensure these directories exist on your host:
 │   ├── sabnzbd/
 │   └── qbittorrent/
 └── data/               # Media and downloads
-    ├── movies/         # Movie files
-    ├── tv/            # TV show files
-    ├── music/         # Music files
-    ├── downloads/     # Download staging area
-    └── scripts/       # Post-processing scripts (optional)
+  ├── movies/         # Movie files
+  ├── tv/            # TV show files
+  ├── music/         # Music files
+  ├── downloads/     # Download staging area
+  └── scripts/       # Post-processing scripts (optional)
 ```
 
 ## Configuration

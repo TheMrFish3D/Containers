@@ -34,8 +34,8 @@ Choose one of the following volume configurations:
 
 **Option 2: Bind Mounts**
 Ensure these directories exist on your host:
-- `/tank/data/n8n/postgres/` - PostgreSQL database files
-- `/tank/data/n8n/data/` - n8n application data and workflows
+- `/fileServerMountPath/data/n8n/postgres/` - PostgreSQL database files
+- `/fileServerMountPath/data/n8n/data/` - n8n application data and workflows
 
 ## Configuration
 
@@ -72,8 +72,8 @@ Ensure these directories exist on your host:
 - **Volume Configuration**: Uncomment bind mount volumes if preferred:
   ```yaml
   volumes:
-    - /tank/data/n8n/postgres:/var/lib/postgresql/data
-    - /tank/data/n8n/data:/home/node/.n8n
+    - /fileServerMountPath/data/n8n/postgres:/var/lib/postgresql/data
+    - /fileServerMountPath/data/n8n/data:/home/node/.n8n
   ```
 
 ### User/Group Configuration
@@ -136,7 +136,7 @@ docker exec -i postgres psql -U n8n -d n8n < n8n-backup.sql
 docker-compose down
 
 # Backup application data and database
-cp -r /tank/data/n8n /backup/location/n8n-backup-$(date +%Y%m%d-%H%M%S)
+cp -r /fileServerMountPath/data/n8n /backup/location/n8n-backup-$(date +%Y%m%d-%H%M%S)
 
 # Or if using Docker volumes
 docker run --rm -v n8n-data:/data -v n8n-postgres:/postgres -v $(pwd):/backup alpine tar czf /backup/n8n-backup-$(date +%Y%m%d-%H%M%S).tar.gz /data /postgres
@@ -156,7 +156,7 @@ mkdir -p "$BACKUP_DIR"
 docker exec postgres pg_dump -U n8n -d n8n > "$BACKUP_DIR/n8n-db-$DATE.sql"
 
 # Backup application data (if using bind mounts)
-cp -r /tank/data/n8n/data "$BACKUP_DIR/n8n-data-$DATE"
+cp -r /fileServerMountPath/data/n8n/data "$BACKUP_DIR/n8n-data-$DATE"
 
 # Keep only last 7 backups
 ls -t "$BACKUP_DIR" | tail -n +15 | xargs -I {} rm -rf "$BACKUP_DIR/{}"

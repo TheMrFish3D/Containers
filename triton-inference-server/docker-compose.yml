@@ -2,17 +2,18 @@
 # NVIDIA Triton Inference Server
 #
 # Service:
-# - triton
+# - triton — NVIDIA Triton Inference Server for multi-framework model serving
 # Docker Hub:
 # - https://catalog.ngc.nvidia.com/orgs/nvidia/containers/tritonserver
 # GitHub:
 # - https://github.com/triton-inference-server/server
 #
 # Volumes:
-# - /tank/data/models -> /models (model repository)
+# - /fileServerMountPath/data/models -> /models (model repository)
 #
 # How to use:
-# 1) Place models in /tank/data/models following Triton repo structure.
+# 1) Place models in /fileServerMountPath/data/models following Triton repo structure.
+#    Set /fileServerMountPath to your Linux host path. On Docker Desktop + WSL, use /mnt/<drive> (e.g., /mnt/d).
 # 2) Start:  docker compose up -d
 # 3) Stop:   docker compose down
 # 4) Update: docker compose pull && docker compose up -d
@@ -36,5 +37,5 @@ services:
       - "8001:8001"
       - "8002:8002"
     volumes:
-      - /tank/data/models:/models
+      - /path/to/your/mount/data/models:/models
     command: tritonserver --model-repository=/models --model-control-mode=poll --repository-poll-secs=60 --strict-model-config=false --exit-on-error=false

@@ -2,14 +2,14 @@
 # Satisfactory Dedicated Server (wolveix/satisfactory-server)
 #
 # Service:
-# - satisfactory
+# - satisfactory — Satisfactory dedicated server for multiplayer
 # Docker Hub:
 # - https://hub.docker.com/r/wolveix/satisfactory-server
 # GitHub:
 # - https://github.com/wolveix/satisfactory-server
 #
 # Volumes:
-# - /tank/containers/satisfactory -> /config
+# - /fileServerMountPath/containers/satisfactory -> /config
 # Ports:
 # - 7777/udp (Game)
 # - 15000/udp (Beacon)
@@ -43,7 +43,7 @@ services:
       - "15000:15000/udp"
       - "15777:15777/udp"
     volumes:
-      - /tank/containers/satisfactory:/config
+      - /fileServerMountPath/containers/satisfactory:/config
     healthcheck:
       test: ["CMD", "bash", "/healthcheck.sh"]
       interval: 30s

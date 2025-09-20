@@ -2,19 +2,20 @@
 # Minecraft Bedrock Server (itzg/minecraft-bedrock-server)
 #
 # Service:
-# - minecraft-bedrock
+# - minecraft-bedrock — Bedrock edition server for cross-platform Minecraft
 # Docker Hub:
 # - https://hub.docker.com/r/itzg/minecraft-bedrock-server
 # GitHub:
 # - https://github.com/itzg/docker-minecraft-bedrock-server
 #
 # Volumes:
-# - /tank/containers/minecraft-bedrock -> /data (world, configs)
+# - /fileServerMountPath/containers/minecraft-bedrock -> /data (world, configs)
 # Ports:
 # - 19132/udp -> Bedrock server
 #
 # How to use:
 # 1) Ensure EULA=TRUE and adjust environment vars as desired.
+#    Set /fileServerMountPath to your Linux host mount. On Docker Desktop + WSL, use /mnt/<drive>.
 # 2) Start:  docker compose up -d
 # 3) Stop:   docker compose down
 # 4) Update: docker compose pull && docker compose up -d
@@ -45,6 +46,6 @@ services:
     ports:
       - "19132:19132/udp"
     volumes:
-      - /tank/containers/minecraft-bedrock:/data
+      - /fileServerMountPath/containers/minecraft-bedrock:/data
     stdin_open: true
     tty: true

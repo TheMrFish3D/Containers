@@ -2,7 +2,29 @@
 
 This stack deploys a Minecraft Bedrock Edition server for cross-platform multiplayer gaming.
 
-## Services
+## Minecraft Bedrock Server
+Runs a Bedrock edition Minecraft server using `itzg/minecraft-bedrock-server`.
+
+## Quick start
+
+1) Set `EULA=TRUE` and adjust environment variables in `docker-compose.yml`.
+2) Start: `docker compose up -d`
+3) Stop: `docker compose down`
+4) Update: `docker compose pull && docker compose up -d`
+
+## Ports
+
+- 19132/udp -> Bedrock server
+
+## Volumes
+
+- `/fileServerMountPath/containers/minecraft-bedrock` -> `/data`
+
+## Links
+
+- Docker Hub: https://hub.docker.com/r/itzg/minecraft-bedrock-server
+- GitHub: https://github.com/itzg/docker-minecraft-bedrock-server
+
 
 - **Minecraft Bedrock Server**: Cross-platform Minecraft server
   - Port: 19132/udp (Bedrock default)
@@ -20,7 +42,7 @@ This stack deploys a Minecraft Bedrock Edition server for cross-platform multipl
 
 ### Directory Structure
 Ensure this directory exists on your host:
-- `/tank/containers/minecraft-bedrock/` - Server data, worlds, and configuration
+- `/fileServerMountPath/containers/minecraft-bedrock/` - Server data, worlds, and configuration
 
 ### Network Requirements
 - Port 19132/UDP must be accessible for players to connect
@@ -45,7 +67,7 @@ environment:
 ```
 
 ### World Management
-- **World Persistence**: Worlds are stored in `/tank/containers/minecraft-bedrock/worlds/`
+- **World Persistence**: Worlds are stored in `/fileServerMountPath/containers/minecraft-bedrock/worlds/`
 - **Backups**: Regular backups of the worlds directory are recommended
 - **World Name**: Set via `LEVEL_NAME` environment variable
 
@@ -124,7 +146,7 @@ Regular backups are essential:
 docker exec minecraft-bedrock rcon-cli save hold
 docker exec minecraft-bedrock rcon-cli save query
 # Copy world data
-cp -r /tank/containers/minecraft-bedrock/worlds /backup/location/
+cp -r /fileServerMountPath/containers/minecraft-bedrock/worlds /backup/location/
 # Resume saving
 docker exec minecraft-bedrock rcon-cli save resume
 ```

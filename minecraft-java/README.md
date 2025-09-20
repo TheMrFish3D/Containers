@@ -4,9 +4,33 @@ This stack deploys a Minecraft Java Edition server with extensive configuration 
 
 ## Services
 
-- **Minecraft Java Server**: Full-featured Minecraft Java Edition server
+  - **Minecraft Java Server**: Provides multiplayer Minecraft Java Edition gameplay.
   - Port: 25565 (Minecraft default)
   - Port: 25575 (RCON - optional)
+
+# Minecraft Java Server
+
+Runs a Java edition Minecraft server using `itzg/minecraft-server`.
+
+## Quick start
+
+1) Set `EULA=TRUE` and adjust TYPE/VERSION/MEMORY as needed in `docker-compose.yml`.
+2) Start: `docker compose up -d`
+3) Stop: `docker compose down`
+4) Update: `docker compose pull && docker compose up -d`
+
+## Ports
+
+- 25565/tcp -> Minecraft server
+- 25575/tcp -> RCON
+
+## Volumes
+
+- `/fileServerMountPath/containers/minecraft-java` -> `/data`
+
+## Links
+- Docker Hub: https://hub.docker.com/r/itzg/minecraft-server
+- GitHub: https://github.com/itzg/docker-minecraft-server
 
 ## Features
 
@@ -17,12 +41,13 @@ This stack deploys a Minecraft Java Edition server with extensive configuration 
 - Extensive configuration options
 - Plugin/mod support (depending on server type)
 - Automatic server updates
+- Automatic server updates
 
 ## Prerequisites
 
 ### Directory Structure
 Ensure this directory exists on your host:
-- `/tank/containers/minecraft-java/` - Server data, worlds, plugins, and configuration
+- `/fileServerMountPath/containers/minecraft-java/` - Server data, worlds, plugins, and configuration
 
 ### System Requirements
 - **Memory**: At least 2GB RAM allocated (configurable via MEMORY environment variable)
@@ -142,7 +167,7 @@ Regular world backups are essential:
 docker exec minecraft-java rcon-cli save-all
 docker exec minecraft-java rcon-cli save-off
 # Copy world data
-cp -r /tank/containers/minecraft-java/world /backup/location/
+cp -r /fileServerMountPath/containers/minecraft-java/world /backup/location/
 # Resume saving
 docker exec minecraft-java rcon-cli save-on
 ```
@@ -150,7 +175,7 @@ docker exec minecraft-java rcon-cli save-on
 ### World Import
 To import an existing world:
 1. Stop the server
-2. Copy world files to `/tank/containers/minecraft-java/`
+2. Copy world files to `/fileServerMountPath/containers/minecraft-java/`
 3. Update `LEVEL_NAME` if needed
 4. Start the server
 
@@ -158,12 +183,12 @@ To import an existing world:
 
 ### Plugins (Paper/Spigot)
 1. Download plugins (.jar files)
-2. Copy to `/tank/containers/minecraft-java/plugins/`
+2. Copy to `/fileServerMountPath/containers/minecraft-java/plugins/`
 3. Restart server
 
 ### Mods (Forge/Fabric)
 1. Download mods (.jar files)
-2. Copy to `/tank/containers/minecraft-java/mods/`
+2. Copy to `/fileServerMountPath/containers/minecraft-java/mods/`
 3. Restart server
 
 ## Performance Optimization

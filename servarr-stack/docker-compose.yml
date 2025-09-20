@@ -31,13 +31,15 @@
 # - https://github.com/linuxserver/docker-qbittorrent
 #
 # Volumes (host -> container):
-# - /tank/containers/<service> -> /config
-# - /tank/data -> /data (media root for *arr + Bazarr)
-# - /tank/data/downloads -> /downloads (SAB/qBittorrent + *arr import)
-# - /tank/data/scripts -> /scripts (optional for SAB/qBittorrent scripts)
+# - /path/to/your/data/containers/<service> -> /config
+# - /path/to/your/data/media -> /data (media root for *arr + Bazarr)
+# - /path/to/your/data/downloads -> /downloads (SAB/qBittorrent + *arr import)
+# - /path/to/your/data/scripts -> /scripts (optional for SAB/qBittorrent scripts)
 #
 # How to use:
-# 1) Customize host paths under /tank to match your storage.
+# 1) Customize host paths under /path/to/your/data to match your storage.
+#    Set /path/to/your/data to your Linux host mount root. If using Docker Desktop with WSL,
+#    paths typically live under /mnt/<drive> (e.g., /mnt/d). Using locally mounted paths simplifies RBAC/permissions.
 # 2) Ensure PUID/PGID match your media user (id -u / id -g).
 # 3) Start:    docker compose up -d
 # 4) Stop:     docker compose down
@@ -56,9 +58,9 @@ services:
     ports:
       - "8989:8989"
     volumes:
-      - /tank/containers/sonarr:/config
-      - /tank/data:/data
-      - /tank/data/downloads:/downloads
+      - /path/to/your/data/containers/sonarr:/config
+      - /path/to/your/data/media:/data
+      - /path/to/your/data/downloads:/downloads
 
   radarr:
     image: lscr.io/linuxserver/radarr:latest
@@ -71,9 +73,9 @@ services:
     ports:
       - "7878:7878"
     volumes:
-      - /tank/containers/radarr:/config
-      - /tank/data:/data
-      - /tank/data/downloads:/downloads
+      - /path/to/your/data/containers/radarr:/config
+      - /path/to/your/data/media:/data
+      - /path/to/your/data/downloads:/downloads
 
   lidarr:
     image: lscr.io/linuxserver/lidarr:latest
@@ -86,9 +88,9 @@ services:
     ports:
       - "8686:8686"
     volumes:
-      - /tank/containers/lidarr:/config
-      - /tank/data:/data
-      - /tank/data/downloads:/downloads
+      - /path/to/your/data/containers/lidarr:/config
+      - /path/to/your/data/media:/data
+      - /path/to/your/data/downloads:/downloads
 
   prowlarr:
     image: lscr.io/linuxserver/prowlarr:latest
@@ -101,7 +103,7 @@ services:
     ports:
       - "9696:9696"
     volumes:
-      - /tank/containers/prowlarr:/config
+      - /path/to/your/data/containers/prowlarr:/config
 
   bazarr:
     image: lscr.io/linuxserver/bazarr:latest
@@ -114,8 +116,8 @@ services:
     ports:
       - "6767:6767"
     volumes:
-      - /tank/containers/bazarr:/config
-      - /tank/data:/data
+      - /path/to/your/data/containers/bazarr:/config
+      - /path/to/your/data/media:/data
 
   overseerr:
     image: lscr.io/linuxserver/overseerr:latest
@@ -128,7 +130,7 @@ services:
     ports:
       - "5055:5055"
     volumes:
-      - /tank/containers/overseerr:/config
+      - /path/to/your/data/containers/overseerr:/config
   sabnzbd:
     image: lscr.io/linuxserver/sabnzbd:latest
     container_name: sabnzbd
@@ -140,9 +142,9 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - /tank/containers/sabnzbd:/config
-      - /tank/data/downloads:/downloads
-      - /tank/data/scripts:/scripts
+      - /path/to/your/data/containers/sabnzbd:/config
+      - /path/to/your/data/downloads:/downloads
+      - /path/to/your/data/scripts:/scripts
   qbittorrent:
     image: lscr.io/linuxserver/qbittorrent:latest
     container_name: qbittorrent
@@ -157,6 +159,6 @@ services:
       - "6881:6881"
       - "6881:6881/udp"
     volumes:
-      - /tank/containers/qbittorrent:/config
-      - /tank/data/downloads:/downloads
-      - /tank/data/scripts:/scripts
+      - /path/to/your/data/containers/qbittorrent:/config
+      - /path/to/your/data/downloads:/downloads
+      - /path/to/your/data/scripts:/scripts

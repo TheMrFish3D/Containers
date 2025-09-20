@@ -29,7 +29,7 @@ This stack deploys a Satisfactory dedicated server for multiplayer factory build
 
 ### Directory Structure
 Ensure this directory exists on your host:
-- `/tank/containers/satisfactory/` - Server configuration, saves, and game files
+- `/fileServerMountPath/containers/satisfactory/` - Server configuration, saves, and game files
 
 ### Network Requirements
 - Ports 7777/UDP and 15000/UDP must be accessible
@@ -83,14 +83,14 @@ environment:
 
 ### Loading Existing Save
 1. Stop the server
-2. Copy your save file to `/tank/containers/satisfactory/saved/server/`
+2. Copy your save file to `/fileServerMountPath/containers/satisfactory/saved/server/`
 3. Start the server
 4. Connect and select your save
 
 ### Save File Location
 Save files are stored in:
 ```
-/tank/containers/satisfactory/saved/server/
+/fileServerMountPath/containers/satisfactory/saved/server/
 ```
 
 ## Network Access
@@ -143,7 +143,7 @@ The stack includes health checks to monitor server status:
 # Stop the server gracefully
 docker stop satisfactory
 # Backup save files
-cp -r /tank/containers/satisfactory/saved /backup/location/satisfactory-backup-$(date +%Y%m%d-%H%M%S)
+cp -r /fileServerMountPath/containers/satisfactory/saved /backup/location/satisfactory-backup-$(date +%Y%m%d-%H%M%S)
 # Start the server
 docker start satisfactory
 ```
@@ -155,7 +155,7 @@ Create a backup script for regular saves:
 BACKUP_DIR="/backup/satisfactory"
 DATE=$(date +%Y%m%d-%H%M%S)
 mkdir -p "$BACKUP_DIR"
-cp -r /tank/containers/satisfactory/saved "$BACKUP_DIR/satisfactory-$DATE"
+cp -r /fileServerMountPath/containers/satisfactory/saved "$BACKUP_DIR/satisfactory-$DATE"
 # Keep only last 7 backups
 ls -t "$BACKUP_DIR" | tail -n +8 | xargs -I {} rm -rf "$BACKUP_DIR/{}"
 ```

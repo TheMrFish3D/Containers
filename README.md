@@ -139,14 +139,14 @@ For automated deployments with git webhooks:
 ## Prerequisites
 
 ### Storage Requirements
-Ensure the following directories exist on your host system:
-- `/tank/containers/` - Application configuration storage
-- `/tank/data/` - Media storage (for media stacks)
-- `/tank/data/movies/` - Movie files (for Plex/Servarr)
-- `/tank/data/tv/` - TV show files (for Plex/Servarr)
-- `/tank/data/downloads/` - Download storage (for Servarr)
-- `/tank/data/models/` - AI model repository (for Triton)
-- `/tank/data/n8n/` - n8n application and database data (optional, can use Docker volumes)
+Ensure the following directories exist on your host system (replace `/fileServerMountPath` with your Linux host mount root; on Docker Desktop with WSL this is typically under `/mnt/<drive>`, e.g., `/mnt/d`). Using locally mounted paths simplifies RBAC/permissions across containers:
+- `/fileServerMountPath/containers/` - Application configuration storage
+- `/fileServerMountPath/data/` - Media storage (for media stacks)
+- `/fileServerMountPath/data/movies/` - Movie files (for Plex/Servarr)
+- `/fileServerMountPath/data/tv/` - TV show files (for Plex/Servarr)
+- `/fileServerMountPath/data/downloads/` - Download storage (for Servarr)
+- `/fileServerMountPath/data/models/` - AI model repository (for Triton)
+- `/fileServerMountPath/data/n8n/` - n8n application and database data (optional, can use Docker volumes)
 
 ### Additional Requirements by Stack
 - **Tailscale**: Requires `tun` kernel module and IP forwarding enabled
@@ -161,7 +161,7 @@ For GPU acceleration in Plex and AI inference in Triton:
 1. Install NVIDIA Container Toolkit on the host
 2. Ensure the `nvidia` runtime is configured in Docker
 3. Update the `PLEX_CLAIM` environment variable with your claim token (Plex only)
-4. Prepare model repository at `/tank/data/models/` (Triton only)
+4. Prepare model repository at `/fileServerMountPath/data/models/` (Triton only)
 
 ## Configuration
 

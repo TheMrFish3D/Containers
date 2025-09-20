@@ -2,14 +2,14 @@
 # Tailscale (tailscale/tailscale)
 #
 # Service:
-# - tailscale
+# - tailscale — Tailscale VPN client acting as subnet router/exit node
 # Docker Hub:
 # - https://hub.docker.com/r/tailscale/tailscale
 # GitHub:
 # - https://github.com/tailscale/tailscale
 #
 # Volumes:
-# - /tank/containers/tailscale -> /var/lib/tailscale
+# - /fileServerMountPath/containers/tailscale -> /var/lib/tailscale
 # Ports/Networking:
 # - Uses host network mode for best compatibility
 #
@@ -32,7 +32,7 @@ services:
       - TS_ACCEPT_DNS=true
       - TS_ROUTES=192.168.0.0/24
     volumes:
-      - /tank/containers/tailscale:/var/lib/tailscale
+      - /fileServerMountPath/containers/tailscale:/var/lib/tailscale
       - /dev/net/tun:/dev/net/tun
     cap_add:
       - NET_ADMIN

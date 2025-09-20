@@ -4,7 +4,7 @@ This stack deploys NVIDIA Triton Inference Server for high-performance AI model 
 
 ## Services
 
-- **Triton Inference Server**: AI model serving platform
+- **Triton Inference Server**: AI model serving platform for multiple frameworks
   - Port: 8000 (HTTP/REST API)
   - Port: 8001 (gRPC API)
   - Port: 8002 (Prometheus metrics)
@@ -36,12 +36,12 @@ This stack deploys NVIDIA Triton Inference Server for high-performance AI model 
 
 ### Directory Structure
 Ensure this directory exists on your host:
-- `/tank/data/models/` - Model repository containing your AI models
+- `/fileServerMountPath/data/models/` - Model repository containing your AI models
 
 ### Model Repository Structure
 Organize models following Triton's expected structure:
 ```
-/tank/data/models/
+/fileServerMountPath/data/models/
 ├── model_name_1/
 │   ├── config.pbtxt
 │   └── 1/
@@ -82,7 +82,7 @@ Update model repository path if needed:
 volumes:
   - /your/model/path:/models
   # Optional: custom backends or logs
-  - /tank/containers/triton:/opt/tritonserver
+  - /fileServerMountPath/containers/triton:/opt/tritonserver
 ```
 
 ### Server Configuration
@@ -200,7 +200,26 @@ instance_group [
 
 ## Deployment
 
-Deploy this stack in Portainer using the Git repository method or by uploading the docker-compose.yml file directly. Ensure NVIDIA Container Toolkit is installed and model repository is prepared before deployment.
+### Start the Stack
+
+```powershell
+docker compose up -d
+```
+
+Stop the stack:
+
+```powershell
+docker compose down
+```
+
+Update the stack:
+
+```powershell
+docker compose pull
+docker compose up -d
+```
+
+Ensure NVIDIA Container Toolkit is installed and model repository is prepared before deployment.
 
 ## Troubleshooting
 
@@ -240,14 +259,19 @@ nvidia-smi dmon
 ### Model Repository Backup
 ```bash
 # Backup model repository
-cp -r /tank/data/models /backup/location/models-backup-$(date +%Y%m%d-%H%M%S)
+cp -r /fileServerMountPath/data/models /backup/location/models-backup-$(date +%Y%m%d-%H%M%S)
 
 # Or create archive
-tar czf /backup/triton-models-$(date +%Y%m%d-%H%M%S).tar.gz -C /tank/data models
+tar czf /backup/triton-models-$(date +%Y%m%d-%H%M%S).tar.gz -C /fileServerMountPath/data models
 ```
 
 ### Configuration Backup
 ```bash
 # Backup Triton configuration (if using custom backends)
-cp -r /tank/containers/triton /backup/location/triton-config-$(date +%Y%m%d-%H%M%S)
+cp -r /fileServerMountPath/containers/triton /backup/location/triton-config-$(date +%Y%m%d-%H%M%S)
 ```
+
+## Links
+
+- NGC Catalog: https://catalog.ngc.nvidia.com/orgs/nvidia/containers/tritonserver
+- GitHub: https://github.com/triton-inference-server/server

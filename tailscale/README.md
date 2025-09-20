@@ -1,6 +1,6 @@
 # Tailscale VPN Stack
 
-This stack deploys Tailscale as a subnet router and exit node for secure remote access to your network.
+This stack deploys Tailscale as a subnet router and optional exit node for secure remote access.
 
 ## Services
 
@@ -25,7 +25,7 @@ This stack deploys Tailscale as a subnet router and exit node for secure remote 
    ```
 
 2. **Directory Structure**: Ensure this directory exists:
-   - `/tank/containers/tailscale/` - Tailscale state and configuration
+  - `/fileServerMountPath/containers/tailscale/` - Tailscale state and configuration
 
 3. **IP Forwarding**: Verify IP forwarding is enabled:
    ```bash
@@ -85,7 +85,26 @@ This stack deploys Tailscale as a subnet router and exit node for secure remote 
 
 ## Deployment
 
-Deploy this stack in Portainer using the Git repository method or by uploading the docker-compose.yml file directly. Ensure the host system meets all prerequisites before deployment.
+Start the stack:
+
+```powershell
+docker compose up -d
+```
+
+Stop the stack:
+
+```powershell
+docker compose down
+```
+
+Update the stack:
+
+```powershell
+docker compose pull
+docker compose up -d
+```
+
+Ensure the host meets all prerequisites before deployment.
 
 ## Troubleshooting
 
@@ -99,3 +118,8 @@ Deploy this stack in Portainer using the Git repository method or by uploading t
 ```bash
 docker logs tailscale
 ```
+
+## Links
+
+- Docker Hub: https://hub.docker.com/r/tailscale/tailscale
+- GitHub: https://github.com/tailscale/tailscale

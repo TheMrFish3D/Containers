@@ -2,17 +2,17 @@
 # Plex Media Server (linuxserver/plex)
 #
 # Service:
-# - plex
+# - plex — Plex Media Server with optional NVIDIA GPU transcoding
 # Docker Hub:
 # - https://hub.docker.com/r/linuxserver/plex
 # GitHub:
 # - https://github.com/linuxserver/docker-plex
 #
 # Volumes:
-# - /tank/containers/plex -> /config
-# - /tank/data/movies -> /data/movies
-# - /tank/data/tv -> /data/tv
-# - /tank/data/downloads/complete -> /data/downloads
+# - /fileServerMountPath/containers/plex -> /config
+# - /fileServerMountPath/data/movies -> /data/movies
+# - /fileServerMountPath/data/tv -> /data/tv
+# - /fileServerMountPath/data/downloads/complete -> /data/downloads
 # - /dev/shm -> /transcode
 # Ports:
 # - 32400 (Plex web/UI)
@@ -20,6 +20,8 @@
 #
 # How to use:
 # 1) Obtain a valid PLEX_CLAIM then start the container.
+#    Set /fileServerMountPath to your Linux host path. On Docker Desktop with WSL,
+#    use /mnt/<drive> (e.g., /mnt/d). Using local mounts simplifies RBAC/permissions.
 # 2) Start:  docker compose up -d
 # 3) Stop:   docker compose down
 # 4) Update: docker compose pull && docker compose up -d
@@ -41,8 +43,8 @@ services:
       - "32400:32400/tcp"
       - "32469:32469/tcp"
     volumes:
-      - /tank/containers/plex:/config
-      - /tank/data/movies:/data/movies
-      - /tank/data/tv:/data/tv
-      - /tank/data/downloads/complete:/data/downloads
+      - /fileServerMountPath/containers/plex:/config
+      - /fileServerMountPath/data/movies:/data/movies
+      - /fileServerMountPath/data/tv:/data/tv
+      - /fileServerMountPath/data/downloads/complete:/data/downloads
       - /dev/shm:/transcode

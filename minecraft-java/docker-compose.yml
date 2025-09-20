@@ -2,20 +2,21 @@
 # Minecraft Java Server (itzg/minecraft-server)
 #
 # Service:
-# - minecraft-java
+# - minecraft-java — Java edition Minecraft server with optional RCON
 # Docker Hub:
 # - https://hub.docker.com/r/itzg/minecraft-server
 # GitHub:
 # - https://github.com/itzg/docker-minecraft-server
 #
 # Volumes:
-# - /tank/containers/minecraft-java -> /data
+# - /fileServerMountPath/containers/minecraft-java -> /data
 # Ports:
 # - 25565/tcp -> Minecraft server
 # - 25575/tcp -> RCON (optional)
 #
 # How to use:
 # 1) Set EULA=TRUE and adjust env vars (TYPE/VERSION/MEMORY, etc.).
+#    Set /fileServerMountPath to your Linux host mount. On Docker Desktop + WSL, use /mnt/<drive>.
 # 2) Start:  docker compose up -d
 # 3) Stop:   docker compose down
 # 4) Update: docker compose pull && docker compose up -d
@@ -55,6 +56,6 @@ services:
       - "25565:25565"
       - "25575:25575"
     volumes:
-      - /tank/containers/minecraft-java:/data
+      - /fileServerMountPath/containers/minecraft-java:/data
     stdin_open: true
     tty: true

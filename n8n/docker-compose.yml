@@ -2,8 +2,8 @@
 # n8n Automation Platform + PostgreSQL
 #
 # Services:
-# - postgres (postgres:16)
-# - n8n (n8nio/n8n:latest)
+# - postgres (postgres:16) — PostgreSQL database backend for n8n
+# - n8n (n8nio/n8n:latest) — n8n automation app and web UI
 # Docker Hub:
 # - https://hub.docker.com/_/postgres
 # - https://hub.docker.com/r/n8nio/n8n
@@ -15,7 +15,7 @@
 # - n8n-data -> /home/node/.n8n
 #
 # How to use:
-# 1) Optionally switch named volumes to bind mounts for persistence under /tank.
+# 1) Optionally switch named volumes to bind mounts for persistence under /fileServerMountPath (e.g., /mnt/<drive> on Docker Desktop/WSL).
 # 2) Start:  docker compose up -d
 # 3) Stop:   docker compose down
 # 4) Update: docker compose pull && docker compose up -d
