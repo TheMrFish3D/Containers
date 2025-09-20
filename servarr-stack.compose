@@ -1,0 +1,124 @@
+version: "3.9"
+services:
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: sonarr
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Australia/Brisbane
+      # - UMASK=002
+    ports:
+      - "8989:8989"
+    volumes:
+      - /tank/containers/sonarr:/config
+      - /tank/data:/data
+      - /tank/data/downloads:/downloads
+
+  radarr:
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: radarr
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Australia/Brisbane
+      # - UMASK=002
+    ports:
+      - "7878:7878"
+    volumes:
+      - /tank/containers/radarr:/config
+      - /tank/data:/data
+      - /tank/data/downloads:/downloads
+
+  lidarr:
+    image: lscr.io/linuxserver/lidarr:latest
+    container_name: lidarr
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Australia/Brisbane
+      # - UMASK=002
+    ports:
+      - "8686:8686"
+    volumes:
+      - /tank/containers/lidarr:/config
+      - /tank/data:/data
+      - /tank/data/downloads:/downloads
+
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: prowlarr
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Australia/Brisbane
+    ports:
+      - "9696:9696"
+    volumes:
+      - /tank/containers/prowlarr:/config
+
+  bazarr:
+    image: lscr.io/linuxserver/bazarr:latest
+    container_name: bazarr
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Australia/Brisbane
+      # - UMASK=002
+    ports:
+      - "6767:6767"
+    volumes:
+      - /tank/containers/bazarr:/config
+      - /tank/data:/data         # Bazarr must see media paths
+
+  overseerr:
+    image: lscr.io/linuxserver/overseerr:latest
+    container_name: overseerr
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Australia/Brisbane
+    ports:
+      - "5055:5055"
+    volumes:
+      - /tank/containers/overseerr:/config
+  sabnzbd:
+    image: lscr.io/linuxserver/sabnzbd:latest
+    container_name: sabnzbd
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Australia/Brisbane
+      # - UMASK=002            # optional, group-write for *arr imports
+    ports:
+      - "8080:8080"           # SABnzbd web UI (HTTP)
+      # - "9090:9090"         # optional HTTPS
+    volumes:
+      - /tank/containers/sabnzbd:/config
+      - /tank/data/downloads:/downloads
+      - /tank/data/scripts:/scripts   # optional post-processing scripts
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Australia/Brisbane
+      - WEBUI_PORT=8081          # avoid SAB's 8080
+      # - UMASK=002              # optional: group-write for *arr imports
+    ports:
+      - "8081:8081"              # WebUI
+      - "6881:6881"              # BT TCP
+      - "6881:6881/udp"          # BT UDP
+    volumes:
+      - /tank/containers/qbittorrent:/config
+      - /tank/data/downloads:/downloads
+      - /tank/data/scripts:/scripts   # optional
