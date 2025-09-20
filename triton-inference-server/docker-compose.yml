@@ -1,0 +1,25 @@
+version: "3.9"
+services:
+  triton:
+    image: nvcr.io/nvidia/tritonserver:${TRITON_TAG:-24.12}-py3
+    container_name: triton
+    restart: unless-stopped
+    runtime: nvidia
+    shm_size: "2g"
+    ulimits:
+      memlock: -1
+      stack: 67108864
+    environment:
+      - TZ=Australia/Brisbane
+      # optional: tune Triton pools (bytes)
+      # - TRITONSERVER_CPU_MEM_POOL_BYTE_SIZE=0
+      # - TRITONSERVER_PINNED_MEM_POOL_BYTE_SIZE=268435456
+    ports:
+      - "8000:8000"   # REST
+      - "8001:8001"   # gRPC
+      - "8002:8002"   # Prometheus metrics
+    volumes:
+      - /tank/data/models:/models
+      # (optional) keep logs or custom backends here:
+      # - /tank/containers/triton:/opt/tritonserver
+    command: tritonserver --model-repository=/models --model-control-mode=poll --repository-poll-secs=60 --strict-model-config=false --exit-on-error=false
