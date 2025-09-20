@@ -78,6 +78,33 @@ Dedicated server for Satisfactory multiplayer factory building.
 - Health monitoring
 - Persistent save files
 
+### 7. n8n Workflow Automation (`n8n/`)
+Workflow automation platform with PostgreSQL database backend.
+
+**Services:**
+- n8n Workflow Engine (Port: 5678)
+- PostgreSQL Database (Internal)
+
+**Features:**
+- Visual workflow editor
+- Web-based automation platform
+- PostgreSQL persistence
+- Basic authentication
+- Custom node support
+
+### 8. NVIDIA Triton Inference Server (`triton-inference-server/`)
+AI model serving platform for high-performance inference.
+
+**Services:**
+- Triton Server (Port: 8000 REST, 8001 gRPC, 8002 Metrics)
+
+**Features:**
+- Multi-framework AI model serving
+- GPU acceleration with NVIDIA runtime
+- Dynamic model loading
+- REST and gRPC APIs
+- Prometheus metrics
+
 ## Portainer Deployment
 
 ### Method 1: Git Repository Deployment
@@ -91,6 +118,8 @@ Dedicated server for Satisfactory multiplayer factory building.
    - `minecraft-bedrock/docker-compose.yml` for Minecraft Bedrock Server
    - `minecraft-java/docker-compose.yml` for Minecraft Java Server
    - `satisfactory/docker-compose.yml` for Satisfactory Dedicated Server
+   - `n8n/docker-compose.yml` for n8n Workflow Automation
+   - `triton-inference-server/docker-compose.yml` for NVIDIA Triton Inference Server
 5. Configure environment variables if needed
 6. Deploy the stack
 
@@ -116,18 +145,23 @@ Ensure the following directories exist on your host system:
 - `/tank/data/movies/` - Movie files (for Plex/Servarr)
 - `/tank/data/tv/` - TV show files (for Plex/Servarr)
 - `/tank/data/downloads/` - Download storage (for Servarr)
+- `/tank/data/models/` - AI model repository (for Triton)
+- `/tank/data/n8n/` - n8n application and database data (optional, can use Docker volumes)
 
 ### Additional Requirements by Stack
 - **Tailscale**: Requires `tun` kernel module and IP forwarding enabled
 - **Minecraft Servers**: Require sufficient RAM allocation and port forwarding for internet access
 - **Satisfactory**: Requires 8GB+ RAM and stable internet connection
 - **Plex**: Requires NVIDIA Container Toolkit for GPU acceleration
+- **n8n**: Requires PostgreSQL database (included in stack)
+- **Triton Inference Server**: Requires NVIDIA GPU and NVIDIA Container Toolkit
 
-### NVIDIA GPU Support (Plex only)
-For GPU transcoding in Plex:
+### NVIDIA GPU Support (Plex and Triton)
+For GPU acceleration in Plex and AI inference in Triton:
 1. Install NVIDIA Container Toolkit on the host
 2. Ensure the `nvidia` runtime is configured in Docker
-3. Update the `PLEX_CLAIM` environment variable with your claim token
+3. Update the `PLEX_CLAIM` environment variable with your claim token (Plex only)
+4. Prepare model repository at `/tank/data/models/` (Triton only)
 
 ## Configuration
 
@@ -142,6 +176,7 @@ Some stacks require secure configuration:
 - **Tailscale**: Auth key from Tailscale admin console
 - **Plex**: Claim token from plex.tv/claim
 - **Minecraft Java**: RCON password for remote administration
+- **n8n**: Basic auth credentials, database password, and encryption key
 
 ### Volumes
 Update the volume paths in the compose files to match your host system structure before deployment.
@@ -151,12 +186,18 @@ Update the volume paths in the compose files to match your host system structure
   - Plex claim token should be updated
   - Tailscale auth key should be generated fresh
   - Minecraft RCON password should be changed from default
+  - n8n basic auth credentials should be changed from defaults
+  - n8n database password should be changed from default
+  - n8n encryption key should be set to a secure 32-character string
 - Consider using Docker secrets or Portainer environment variables for sensitive data
 - Ensure proper network segmentation if deploying in production
-- Regular backups are essential for game servers
+- Regular backups are essential for game servers and workflow data
 - Monitor logs for unauthorized access attempts
+- For Triton Inference Server, secure access to model repository and API endpoints
 
 ## Support
 For issues with individual applications, refer to their respective documentation:
 - [LinuxServer.io Documentation](https://docs.linuxserver.io/)
 - [Portainer Documentation](https://docs.portainer.io/)
+- [n8n Documentation](https://docs.n8n.io/)
+- [NVIDIA Triton Documentation](https://docs.nvidia.com/deeplearning/triton-inference-server/)
